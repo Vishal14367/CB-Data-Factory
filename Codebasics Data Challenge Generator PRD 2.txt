@@ -1,0 +1,489 @@
+# Codebasics Data Challenge Generator
+## Production Requirements Document v2.1
+
+**Status:** Phase 1 Testing Complete → Production Development  
+**Date:** February 6, 2025  
+**Contact:** vishal@codebasics.io
+
+---
+
+## 🎉 Phase 1 Complete - Next Steps
+
+Great work so far! Phase 1 testing has validated the core workflow. Now we're building the production application with these enhancements:
+
+✅ Research integration (6 free APIs)  
+✅ Groq LLM integration  
+✅ High-quality PDFs with logo  
+✅ Excel solution files  
+✅ Smart auto-configuration  
+✅ Simplified workflow
+
+---
+
+## 1. Updated Workflow
+
+### Complete Flow
+```
+Initial Screen (5 inputs)
+  → Phase 1: Research & Problem
+  → Phase 2: Schema  
+  → Phase 3: Preview
+  → Phase 4: Full Dataset + QA
+  → Phase 5: Downloads
+```
+
+### Auto-Configuration by Difficulty
+
+| Difficulty | Rows | Tables (Normalized) | Columns | Structure |
+|------------|------|---------------------|---------|-----------|
+| Easy | 5,000 | 5 (1 fact + 4 dims) | 15 | Auto |
+| Medium | 10,000 | 8 (2 facts + 6 dims) | 22 | Auto |
+| Difficult | 20,000 | 12 (2 facts + 10 dims) | 30 | Auto |
+
+**If Denormalized**: Always 1 table, columns = 15/22/30
+
+---
+
+## 2. Initial Configuration Screen
+
+### 5 Required Inputs
+
+1. **Domain** (chip selection)
+   - Fast Food, E-Commerce, Healthcare, Banking, Real Estate, Retail, Tourism, Education, Logistics, Telecom, Automobile, Agriculture, Other
+
+2. **Function** (chip selection)
+   - Sales & Marketing, Operations, Finance, HR, Supply Chain, Customer Service, Product, Risk & Compliance, IT, Other
+
+3. **Difficulty** (chip selection)
+   - Easy | Medium | Difficult
+   - Shows auto-config preview: "5,000 rows | 5 tables | 15 columns"
+
+4. **Data Structure** (toggle)
+   - Normalized ⚪ | ⚪ Denormalized
+   - Note: If Denormalized, table count hidden
+
+5. **Context** (optional textarea, 2000 chars)
+   - Placeholder: "Describe requirements, KPIs, focus areas..."
+
+**Button**: "▶️ Generate Challenge" (disabled until 1-4 filled)
+
+---
+
+## 3. Phase 1: Research & Problem Generation
+
+### Research Integration
+
+**6 APIs in Parallel**:
+
+1. **NewsData.io**
+   - Key: `pub_e438d98854874fd2a3f8df81bf56ab02`
+   - Focus: Latest industry news
+
+2. **NewsAPI.org**
+   - Key: `bdfd54b3163f478c9e928ece3720f3c8`
+   - Focus: Top headlines
+
+3. **Google Trends**
+   - Method: pytrends
+   - Focus: Trending topics
+
+4. **Medium RSS**
+   - Method: feedparser
+   - Feeds: `https://medium.com/feed/tag/{domain}`
+
+5. **Tavily AI**
+   - Free tier API
+   - Focus: Recent insights
+
+6. **DuckDuckGo Search**
+   - Method: duckduckgo-search
+   - Focus: Broad coverage
+
+**Rate Limit Handling**: If API fails, continue with others. Minimum 2 sources required.
+
+### Case Study Selection
+
+From aggregated research:
+1. Select ONE primary case study (most recent + relevant)
+2. Use as foundation for problem statement
+3. Keep other sources as supporting context
+
+### Problem Generation (Groq)
+
+**Input**: Primary case study + supporting sources + config  
+**Output** (JSON):
+```json
+{
+  "fictional_company_name": "ShopSphere",
+  "challenge_title": "Reversing Retention Crisis",
+  "problem_statement": "300-400 words with Bruce/Tony/Peter",
+  "analytical_questions": ["Q1", "Q2", ...],
+  "primary_kpis": ["CLV", "Repeat Rate", ...]
+}
+```
+
+**Questions by Difficulty**:
+- Easy: 4-5 questions
+- Medium: 5-6 questions  
+- Difficult: 6-7 questions
+
+### Output Display
+
+- Problem statement (characters highlighted: Bruce 🟣, Tony 🔵, Peter 🟢)
+- Analytical questions
+- Primary KPIs
+- **Research sources** (primary case study marked 🌟)
+- ✅ Approve | 🔄 Regenerate (chatbot)
+
+**Quality Gate**: Characters mentioned, ends with "Imagine yourself as Peter Pandey..."
+
+---
+
+## 4. Phase 2: Schema Generation
+
+### Groq Schema Generation
+
+**Input**: Problem + questions + config  
+**Output**: OLTP normalized schema
+
+**Table Configuration**:
+- Easy: 5 tables (1 fact + 4 dims, 15 total columns)
+- Medium: 8 tables (2 facts + 6 dims, 22 total columns)
+- Difficult: 12 tables (2 facts + 10 dims, 30 total columns)
+
+### Display
+
+- ER diagram
+- Table details (expandable)
+- Column specifications
+- Validation: All questions answerable
+- ✅ Approve | 🔄 Regenerate (chatbot)
+
+**Quality Gate**: Schema supports all questions + KPIs
+
+---
+
+## 5. Phase 3: Dataset Preview
+
+### Preview Generation
+
+**Sample Rows**:
+- Easy: 10 rows per table
+- Medium: 20 rows per table
+- Difficult: 30 rows per table
+
+**Validation**:
+- Referential integrity
+- Realistic distributions
+- Sample edge cases
+
+### Display
+
+- Data tables
+- Quick stats
+- Relationship validation
+- Mini charts
+- ✅ Approve | 🔄 Regenerate (chatbot)
+
+**Quality Gate**: Patterns look realistic
+
+---
+
+## 6. Phase 4: Full Dataset & Quality Validation
+
+### Full Generation
+
+**Sizes**: 5K / 10K / 20K rows (by difficulty)
+
+**Process**:
+1. Generate dimensions (10% of fact size)
+2. Generate fact table(s)
+3. Apply intentional issues (5-7%)
+4. Validate
+
+### Quality Validation
+
+**Comprehensive QA**:
+- Technical: FK integrity, nulls, types, ranges
+- Business: Calculations, constraints, KPIs
+- Statistical: Distributions, correlations, outliers
+- Relationships: Join validation
+- Learning: Question coverage
+
+**Quality PDF**: High-quality with Codebasics logo (top-left), matplotlib charts
+
+### Excel Solution Generation ⭐ NEW
+
+**Structure**: One sheet per question
+
+**Each Sheet Contains**:
+```
+┌─────────────────────────────────┐
+│ Q1: [Question text]             │
+│                                 │
+│ ANSWER:                         │
+│ [Insights and findings]         │
+│                                 │
+│ APPROACH:                       │
+│ [Methodology]                   │
+│                                 │
+│ SAMPLE QUERY:                   │
+│ [SQL code if applicable]        │
+│                                 │
+│ RESULTS:                        │
+│ [Data table]                    │
+│                                 │
+│ [Embedded Excel Chart] 📊       │
+└─────────────────────────────────┘
+```
+
+**Chart Types**: Bar, Line, Pie, Scatter (embedded in Excel using openpyxl.chart)
+
+**Quality Gate**: QA score ≥ 8/10
+
+---
+
+## 7. Phase 5: Final Downloads
+
+### ZIP Structure
+
+```
+[Company]_Challenge_[Date].zip
+│
+├── datasets/
+│   ├── dim_customers.csv
+│   ├── dim_products.csv
+│   ├── fact_sales.csv
+│   └── [all tables...]
+│
+├── documentation/
+│   ├── Challenge_Document.pdf ⭐ Logo top-left
+│   ├── Data_Dictionary.csv
+│   ├── README.txt
+│
+├── quality_assurance/
+│   ├── Data_Quality_Report.pdf ⭐ Logo top-left
+│   └── QA_Results.json
+│
+├── solutions/
+│   └── Solution_Analysis.xlsx ⭐ NEW
+│       (Sheets: Q1, Q2, ..., each with chart)
+│
+├── resources/
+│   ├── Research_Sources.txt ⭐ Primary case study marked
+│   ├── Schema_Diagram.png
+│   └── Suggested_Visualizations.txt
+│
+└── metadata.json
+```
+
+### Key Files
+
+**Challenge_Document.pdf**:
+- Codebasics logo (top-left, every page)
+- Professional design
+- Problem + questions + characters + KPIs
+- Research attribution
+
+**Data_Quality_Report.pdf**:
+- Codebasics logo (top-left)
+- 11 pages with matplotlib charts
+- Professional formatting
+
+**Solution_Analysis.xlsx** ⭐ NEW:
+- One sheet per question
+- Embedded Excel charts (not images)
+- Complete answers + approach + data
+
+**Research_Sources.txt** ⭐ UPDATED:
+- Primary case study marked with 🌟
+- All 6 sources listed with URLs
+- Relevance notes
+
+---
+
+## 8. Technical Implementation
+
+### LLM: Groq Integration
+
+**Usage**: All AI generation (problem, schema, validation)  
+**Configuration**: Already provided to antigravity  
+**Error Handling**: If Groq fails → show error "Please contact vishal@codebasics.io"
+
+### Research APIs
+
+**Parallel Execution**: ThreadPoolExecutor for 6 APIs  
+**Timeout**: 10 seconds per API  
+**Rate Limits**: Skip failed APIs, continue with others  
+**Minimum**: 2 successful sources required
+
+### PDF Generation
+
+**Library**: ReportLab or similar  
+**Logo**: Top-left on all pages  
+**Charts**: matplotlib → embedded as images  
+**Quality**: Professional fonts, spacing, colors
+
+### Excel Generation
+
+**Library**: openpyxl  
+**Charts**: Use openpyxl.chart (BarChart, LineChart, PieChart)  
+**Format**: One workbook, multiple sheets (Q1, Q2, ...)
+
+---
+
+## 9. Error Handling
+
+### Groq API Failure
+
+**Action**: Show error message  
+**Message**: "An error occurred with our AI service. Please contact vishal@codebasics.io for assistance."  
+**No Fallback**: Do not fall back to other LLMs
+
+### Research API Failures
+
+**Action**: Continue with working APIs  
+**Minimum**: At least 2 sources must succeed  
+**Error**: If < 2 sources → show error, ask to retry
+
+### Rate Limits
+
+**Detection**: Catch RateLimitError  
+**Action**: Skip that API, continue with others  
+**Logging**: Log which APIs hit limits
+
+---
+
+## 10. Acceptance Criteria
+
+### Must Have ✅
+
+**Initial Screen**:
+- 5 inputs (domain, function, difficulty, structure, context)
+- Auto-config display
+- Validation
+
+**Phase 1**:
+- 6 API research (parallel)
+- Primary case study selection
+- Problem generation (Groq)
+- Character highlighting
+- Research sources display
+- Chatbot regeneration
+
+**Phase 2**:
+- OLTP schema (Groq)
+- Auto table count by difficulty
+- Validation
+- Chatbot regeneration
+
+**Phase 3**:
+- Preview generation
+- Relationship validation
+- Chatbot regeneration
+
+**Phase 4**:
+- Full dataset (5K/10K/20K)
+- Quality PDF with logo + matplotlib
+- **Excel solution with embedded charts** ⭐
+- Chatbot regeneration
+
+**Phase 5**:
+- Complete ZIP
+- All files high-quality
+- Logo on PDFs
+- Excel solution included
+
+### Quality Standards
+
+**All PDFs**:
+- Codebasics logo (top-left)
+- Professional design
+- High-resolution charts
+
+**Excel Solution**:
+- One sheet per question
+- Embedded charts (not images)
+- Complete answers
+
+**Research**:
+- Primary case study marked
+- All sources attributed
+
+---
+
+## 11. Phase 2 Development Checklist
+
+**Research Integration**:
+- [ ] NewsData.io integration
+- [ ] NewsAPI.org integration
+- [ ] Google Trends integration
+- [ ] Medium RSS integration
+- [ ] Tavily AI integration
+- [ ] DuckDuckGo integration
+- [ ] Parallel execution
+- [ ] Case study selection algorithm
+
+**Groq Integration**:
+- [ ] Problem generation
+- [ ] Schema generation
+- [ ] Error handling
+
+**Excel Solution**:
+- [ ] Workbook creation
+- [ ] Sheet per question structure
+- [ ] Embedded chart generation
+- [ ] Data table formatting
+
+**PDF Enhancement**:
+- [ ] Codebasics logo integration
+- [ ] High-quality design template
+- [ ] matplotlib chart embedding
+
+**Auto-Configuration**:
+- [ ] Difficulty-based sizing
+- [ ] Table count logic
+- [ ] Column distribution
+
+**Testing**:
+- [ ] End-to-end workflow
+- [ ] Error scenarios
+- [ ] Rate limit handling
+- [ ] File downloads
+
+---
+
+## 12. Support & Contact
+
+**Primary Contact**: vishal@codebasics.io
+
+**For**:
+- Groq API issues
+- Technical questions
+- Bug reports
+- Feature requests
+
+---
+
+## Summary of Changes
+
+### From Phase 1 → Production
+
+1. ✅ Removed Phase 0 as separate phase → single input screen
+2. ✅ Auto-configuration by difficulty (rows, tables, columns)
+3. ✅ 6 research APIs (parallel aggregation)
+4. ✅ Primary case study selection
+5. ✅ Groq LLM integration
+6. ✅ High-quality PDFs with Codebasics logo
+7. ✅ Excel solution file with embedded charts
+8. ✅ Updated research attribution
+9. ✅ Streamlined workflow (5 phases)
+10. ✅ Smart defaults, simplified UX
+
+---
+
+**END OF PRD**
+
+Next: Phase 2 Development → Production Launch
+
+Contact: vishal@codebasics.io

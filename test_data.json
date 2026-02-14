@@ -1,0 +1,9 @@
+{
+    "domain": "E-Commerce",
+    "function": "Sales & Marketing",
+    "problem_statement": "Our online store has been losing repeat customers over the past year. We need comprehensive data to analyze retention trends and identify what factors influence repeat purchases.",
+    "skill_level": "Intermediate",
+    "dataset_size": 10000,
+    "data_structure": "Normalized",
+    "primary_questions": "Which customer segments are most likely to churn?"
+}
