@@ -9,7 +9,7 @@ ENV PORT=8000
 WORKDIR /app
 
 # Install system dependencies
-# Added more comprehensive libs for common Python package build failures
+# Added libraries for lxml (duckduckgo-search), pillow/matplotlib (jpeg, zlib), and reportlab
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     python3-dev \
@@ -17,14 +17,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libmagic1 \
     libffi-dev \
     libssl-dev \
+    libxml2-dev \
+    libxslt-dev \
+    zlib1g-dev \
+    libjpeg-dev \
     curl \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements and install dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir --default-timeout=100 -r requirements.txt
 
 # Copy the rest of the backend code
 COPY . .
