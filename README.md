@@ -29,39 +29,53 @@ Or just double-click: [RUN_DEMO.bat](RUN_DEMO.bat)
 4. **QA validates:** 6 categories of checks (technical, business, realism, learning, edge cases, schema)
 5. **Outputs:** 17-page PDF quality report with 10-15 visualizations
 
-## 🚀 Quick Start
+## 🚀 Quick Start (Choose One)
 
-### Prerequisites
+### Option 1: Docker (Easiest - Runs everywhere)
+If you have **Docker Desktop** installed, this is the fastest way:
 
+1. **Clone/Download** this repository.
+2. In the project root, create/verify `backend/.env` with your key:
+   ```text
+   GROQ_API_KEY=your_key_here
+   ```
+3. Run the following command:
+   ```bash
+   docker-compose up --build
+   ```
+4. Open your browser: **`http://localhost:3000`**
+
+---
+
+### Option 2: Manual Setup (Local Development)
+
+#### Prerequisites
 - **Python 3.10+** - [Download](https://www.python.org/downloads/)
 - **Node.js 18+** - [Download](https://nodejs.org/)
-- **Anthropic API Key** - [Get one](https://console.anthropic.com/)
+- **Groq API Key** - [Get one here](https://console.groq.com/)
 
-### Setup
-
-1. **Clone/Download this repository**
-
+#### Setup
+1. **Clone/Download** this repository.
 2. **Configure API Key:**
    ```bash
    cd backend
    copy .env.example .env
-   # Edit .env and add your ANTHROPIC_API_KEY
+   # Edit .env and add your GROQ_API_KEY
    ```
-
 3. **Start Backend:**
    ```bash
    cd backend
+   # Run the start script
    start.bat
    ```
-   Backend will be available at: `http://127.0.0.1:8000`
-
+   *Backend: `http://127.0.0.1:8000`*
 4. **Start Frontend (in new terminal):**
    ```bash
-   cd frontend
+   cd frontend_new
+   # Run the start script
    start.bat
    ```
-   Frontend will be available at: `http://localhost:3000`
-
+   *Frontend: `http://localhost:3000`*
 5. **Open your browser:** `http://localhost:3000`
 
 ## 📁 Project Structure
