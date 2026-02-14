@@ -6,10 +6,10 @@ services:
     dockerContext: backend
     dockerfilePath: Dockerfile
     plan: free
-    region: singapore # Change to your preferred region
+    region: singapore
     envVars:
       - key: GROQ_API_KEY
-        sync: false # You will enter this manually in the Render dashboard
+        sync: false # Enter manually in dashboard
       - key: HOST
         value: 0.0.0.0
       - key: PORT
