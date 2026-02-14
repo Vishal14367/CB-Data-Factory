@@ -1,0 +1,31 @@
+services:
+  # Backend service
+  - type: web
+    name: cb-data-factory-backend
+    runtime: docker
+    dockerContext: backend
+    dockerfilePath: Dockerfile
+    plan: free
+    region: singapore # Change to your preferred region
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false # You will enter this manually in the Render dashboard
+      - key: HOST
+        value: 0.0.0.0
+      - key: PORT
+        value: 10000
+
+  # Frontend service
+  - type: web
+    name: cb-data-factory-frontend
+    runtime: docker
+    dockerContext: frontend_new
+    dockerfilePath: Dockerfile
+    plan: free
+    region: singapore
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: cb-data-factory-backend
+          property: host
