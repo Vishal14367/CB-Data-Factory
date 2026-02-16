@@ -1,5 +1,5 @@
 services:
-  # Backend service
+  # Backend service only - Frontend will be deployed on Vercel
   - type: web
     name: cb-data-factory-backend
     runtime: docker
@@ -14,18 +14,3 @@ services:
         value: 0.0.0.0
       - key: PORT
         value: 10000
-
-  # Frontend service
-  - type: web
-    name: cb-data-factory-frontend
-    runtime: docker
-    dockerContext: ./frontend_new
-    dockerfilePath: ./frontend_new/Dockerfile
-    plan: free
-    region: singapore
-    envVars:
-      - key: NEXT_PUBLIC_API_URL
-        fromService:
-          type: web
-          name: cb-data-factory-backend
-          property: host
