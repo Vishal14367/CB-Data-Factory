@@ -1,47 +1,44 @@
-# Backend Dockerfile
+# Backend Dockerfile - Optimized for Render
 FROM python:3.10-slim
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-ENV PORT=8000
+# Prevent Python from writing pyc files and buffering stdout/stderr
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
 
 WORKDIR /app
 
-# Install system dependencies
-# Added libraries for lxml (duckduckgo-search), pillow/matplotlib (jpeg, zlib), and reportlab
+# Install system dependencies in one layer
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
-    python3-dev \
     libpq-dev \
-    libmagic1 \
-    libffi-dev \
-    libssl-dev \
     libxml2-dev \
-    libxslt-dev \
+    libxslt1-dev \
     zlib1g-dev \
-    libjpeg-dev \
-    curl \
-    && apt-get clean \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements and install dependencies
+# Copy and install Python dependencies first (for better caching)
 COPY requirements.txt .
-RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
-    pip install --no-cache-dir --default-timeout=100 -r requirements.txt
+RUN pip install --upgrade pip setuptools wheel && \
+    pip install -r requirements.txt
 
-# Copy the rest of the backend code
-COPY . .
+# Copy application code
+COPY src/ ./src/
+COPY assets/ ./assets/ 2>/dev/null || true
 
-# Ensure src is treated as a package (though Python 3.3+ doesn't strictly need it)
-RUN touch src/__init__.py
+# Create output directory
+RUN mkdir -p output && \
+    touch src/__init__.py
 
-# Create output directory for sessions and reports
-RUN mkdir -p output
-
-# Expose the port (Render will override this, but good for local)
+# Expose port
 EXPOSE 8000
 
-# Command to run the application using the PORT env var
-# Using shell form to allow environment variable expansion
-CMD uvicorn src.main:app --host 0.0.0.0 --port ${PORT}
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=40s \
+    CMD python -c "import requests; requests.get('http://localhost:8000/')" || exit 1
+
+# Run the application
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
