@@ -1,36 +1,37 @@
-# Dockerfile for Render frontend
-FROM node:18-slim AS builder
-
+# Production-optimized Dockerfile for Next.js
+FROM node:18-slim AS base
 WORKDIR /app
-
-# 1. Install dependencies first
 COPY package.json package-lock.json ./
-# Use strict install to stick to package-lock
+
+# Dependencies stage
+FROM base AS deps
 RUN npm ci
 
-# 2. Copy source code
+# Builder stage
+FROM base AS builder
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# 3. Environment variables needed for build
+# Build environment variables
 ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# 4. Build
+# Build the application
 RUN npm run build
 
-# 5. Production image - smaller
+# Production stage
 FROM node:18-slim AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Create non-root user
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+# Create system user
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
 
-# Copy standalone build
+# Copy necessary files from builder
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
@@ -38,6 +39,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 USER nextjs
 
 EXPOSE 3000
+
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
