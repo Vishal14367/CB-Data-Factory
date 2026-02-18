@@ -5,7 +5,8 @@ FROM python:3.10-slim
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PORT=10000
 
 WORKDIR /app
 
@@ -33,8 +34,8 @@ COPY assets/ ./assets/
 RUN mkdir -p output && \
     touch src/__init__.py
 
-# Expose port
-EXPOSE 8000
+# Expose port (Render overrides this with its own PORT env var)
+EXPOSE 10000
 
-# Run application
-CMD uvicorn src.main:app --host 0.0.0.0 --port $PORT
+# Run application - uses $PORT env var (Render sets this to 10000 by default)
+CMD uvicorn src.main:app --host 0.0.0.0 --port ${PORT:-10000}

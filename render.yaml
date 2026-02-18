@@ -1,5 +1,5 @@
 services:
-  # Backend service only - Frontend will be deployed on Vercel
+  # Backend service only - Frontend deployed on Vercel
   - type: web
     name: cb-data-factory-backend
     runtime: docker
@@ -7,10 +7,9 @@ services:
     dockerfilePath: ./backend/Dockerfile
     plan: free
     region: singapore
+    healthCheckPath: /
     envVars:
       - key: GROQ_API_KEY
         sync: false
       - key: HOST
         value: 0.0.0.0
-      - key: PORT
-        value: 10000
