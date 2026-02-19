@@ -22,7 +22,10 @@ services:
     plan: free
     region: singapore
     envVars:
-      - key: NEXT_PUBLIC_API_URL
-        value: http://cb-data-factory-backend:10000
+      - key: BACKEND_URL
+        fromService:
+          name: cb-data-factory-backend
+          type: web
+          property: hostport
       - key: NODE_VERSION
         value: 20.11.0
