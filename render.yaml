@@ -23,9 +23,6 @@ services:
     region: singapore
     envVars:
       - key: BACKEND_URL
-        fromService:
-          name: cb-data-factory-backend
-          type: web
-          property: hostport
+        sync: false
       - key: NODE_VERSION
         value: 20.11.0
