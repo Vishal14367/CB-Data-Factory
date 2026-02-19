@@ -1,4 +1,4 @@
-# Codebasics Data Factory
+# Codebasics Data Challenge Generator
 
 **Foundation Phase: Data Quality Engine + PDF Report**
 
@@ -6,15 +6,9 @@ A production-grade system that generates realistic, quality-validated synthetic 
 
 ---
 
-## 🌍 Live Deployment (Frontend + Backend)
+## 🌍 Live Deployment (Easy One-Click)
 
-This project uses a split deployment strategy for maximum performance and reliability:
-- **Backend**: Hosted on Render
-- **Frontend**: Hosted on Vercel
-
-### Part 1: Deploy Backend (Render)
-
-Click the button below to deploy the backend API for **FREE** on Render:
+Click the button below to deploy the ENTIRE application (Frontend + Backend) for **FREE** on Render:
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Vishal14367/CB-Data-Factory)
 
@@ -23,17 +17,8 @@ Click the button below to deploy the backend API for **FREE** on Render:
 2. Link your GitHub account.
 3. In the **`GROQ_API_KEY`** field, enter your actual Groq API key.
 4. Click **Apply**.
-5. Once building finishes (about 5-10 mins), copy your **Backend URL** (e.g., `https://cb-data-factory-backend.onrender.com`).
-
-### Part 2: Deploy Frontend (Vercel)
-
-1. Go to [Vercel Dashboard](https://vercel.com/new).
-2. Import this repository: `Vishal14367/CB-Data-Factory`
-3. **IMPORTANT**: Change **Root Directory** to `frontend_new`.
-4. Add Environment Variable:
-   - Key: `NEXT_PUBLIC_API_URL`
-   - Value: `YOUR_BACKEND_URL` (from Part 1)
-5. Click **Deploy**.
+5. Once building finishes (about 5-10 mins), Render will give you URLs for both Backend and Frontend.
+6. Open the **Frontend URL** to use the application!
 
 ---
 
