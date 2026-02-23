@@ -20,6 +20,11 @@ FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+# BACKEND_URL must be available at BUILD TIME because Next.js standalone
+# compiles rewrites into the server bundle during `npm run build`.
+# http://backend:8000 is the internal Docker service name — always correct.
+ARG BACKEND_URL=http://backend:8000
+ENV BACKEND_URL=$BACKEND_URL
 ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN npm run build

@@ -193,7 +193,7 @@ class DuckDuckGoFetcher(ResearchFetcher):
 
     def fetch(self, domain: str, function: str) -> List[ResearchSource]:
         try:
-            results = DDGS().text(f"{domain} industry {function} trends 2024 2025", max_results=3)
+            results = DDGS(timeout=10).text(f"{domain} industry {function} trends 2024 2025", max_results=3)
             sources = []
             for r in results:
                 sources.append(ResearchSource(
@@ -312,18 +312,21 @@ class ResearchAggregator:
         
         with ThreadPoolExecutor(max_workers=len(self.fetchers)) as executor:
             future_to_fetcher = {
-                executor.submit(fetcher.fetch, domain, function): fetcher 
+                executor.submit(fetcher.fetch, domain, function): fetcher
                 for fetcher in self.fetchers
             }
-            
-            for future in as_completed(future_to_fetcher):
-                fetcher = future_to_fetcher[future]
-                try:
-                    sources = future.result()
-                    logger.info(f"{fetcher.name()} returned {len(sources)} sources")
-                    all_sources.extend(sources)
-                except Exception as e:
-                    logger.error(f"{fetcher.name()} failed: {e}")
+
+            try:
+                for future in as_completed(future_to_fetcher, timeout=30):
+                    fetcher = future_to_fetcher[future]
+                    try:
+                        sources = future.result()
+                        logger.info(f"{fetcher.name()} returned {len(sources)} sources")
+                        all_sources.extend(sources)
+                    except Exception as e:
+                        logger.error(f"{fetcher.name()} failed: {e}")
+            except TimeoutError:
+                logger.warning("Research timed out after 30s — using results collected so far")
 
         # Deduplicate by URL
         unique_sources = {}
