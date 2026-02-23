@@ -17,8 +17,8 @@ ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Build the application (skip lint to avoid CI failures)
-RUN npx next build --no-lint
+# Build the application (lint is disabled in next.config.ts)
+RUN npm run build
 
 # Production stage
 FROM node:22-slim AS runner
