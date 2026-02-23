@@ -1,41 +1,39 @@
 # Production-optimized Dockerfile for Next.js
-FROM node:22-slim AS base
+#
+# Uses full node:22 for build stages (SWC/Turbopack needs libstdc++ and
+# other system libs that node:22-slim strips out).
+# Uses node:22-slim for the final production runner (minimal footprint).
+
+# ── Base: just copy package.json ──────────────────────────────────────────────
+FROM node:22 AS base
 WORKDIR /app
-# Only copy package.json — NOT package-lock.json.
-# The lockfile was generated on Windows and locks in Windows-specific
-# native binaries (e.g. @next/swc-win32). Omitting it forces npm to
-# resolve the correct Linux binaries for this build environment.
+# Only package.json — lockfile is omitted because it was generated on Windows
+# and pins Windows-specific native binaries that don't exist on Linux.
 COPY package.json ./
 
-# Dependencies stage
+# ── Dependencies: install for Linux ───────────────────────────────────────────
 FROM base AS deps
 RUN npm install
 
-# Builder stage
+# ── Builder: compile the Next.js app ──────────────────────────────────────────
 FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Build environment variables
-ARG NEXT_PUBLIC_API_URL
-ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Build the application (lint + type-check disabled in next.config.ts)
 RUN npm run build
 
-# Production stage
+# ── Runner: minimal production image ──────────────────────────────────────────
 FROM node:22-slim AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Create system user
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
-# Copy necessary files from builder
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
