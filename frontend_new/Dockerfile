@@ -1,7 +1,11 @@
 # Production-optimized Dockerfile for Next.js
 FROM node:22-slim AS base
 WORKDIR /app
-COPY package.json package-lock.json ./
+# Only copy package.json — NOT package-lock.json.
+# The lockfile was generated on Windows and locks in Windows-specific
+# native binaries (e.g. @next/swc-win32). Omitting it forces npm to
+# resolve the correct Linux binaries for this build environment.
+COPY package.json ./
 
 # Dependencies stage
 FROM base AS deps
@@ -17,7 +21,7 @@ ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Build the application (lint is disabled in next.config.ts)
+# Build the application (lint + type-check disabled in next.config.ts)
 RUN npm run build
 
 # Production stage
