@@ -24,10 +24,10 @@ AI_MODEL = "llama-3.3-70b-versatile"  # Groq's fast model
 HOST = os.getenv("HOST", "127.0.0.1")
 PORT = int(os.getenv("PORT", 8000))
 
-# Research API Keys
-NEWSDATA_API_KEY = os.getenv("NEWSDATA_API_KEY", "pub_e438d98854874fd2a3f8df81bf56ab02")
-NEWSAPI_KEY = os.getenv("NEWSAPI_KEY", "bdfd54b3163f478c9e928ece3720f3c8")
-TAVILY_API_KEY = os.getenv("TAVILY_API_KEY", "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")
+# Research API Keys (optional - used for enhanced research features)
+NEWSDATA_API_KEY = os.getenv("NEWSDATA_API_KEY", "")
+NEWSAPI_KEY = os.getenv("NEWSAPI_KEY", "")
+TAVILY_API_KEY = os.getenv("TAVILY_API_KEY", "")
 
 # Generation Defaults
 DEFAULT_DIFFICULTY = os.getenv("DEFAULT_DIFFICULTY", "Medium")
