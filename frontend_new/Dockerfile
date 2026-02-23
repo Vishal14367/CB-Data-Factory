@@ -1,11 +1,11 @@
 # Production-optimized Dockerfile for Next.js
-FROM node:20-slim AS base
+FROM node:22-slim AS base
 WORKDIR /app
 COPY package.json package-lock.json ./
 
 # Dependencies stage
 FROM base AS deps
-RUN npm ci
+RUN npm install
 
 # Builder stage
 FROM base AS builder
@@ -21,7 +21,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN npx next build --no-lint
 
 # Production stage
-FROM node:20-slim AS runner
+FROM node:22-slim AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
