@@ -6,22 +6,6 @@ A production-grade system that generates realistic, quality-validated synthetic 
 
 ---
 
-## 🌍 Live Deployment (Easy One-Click)
-
-Click the button below to deploy the ENTIRE application (Frontend + Backend) for **FREE** on Render:
-
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Vishal14367/CB-Data-Factory)
-
-**Deployment Steps:**
-1. Click the button above.
-2. Link your GitHub account.
-3. In the **`GROQ_API_KEY`** field, enter your actual Groq API key.
-4. Click **Apply**.
-5. Once building finishes (about 5-10 mins), Render will give you URLs for both Backend and Frontend.
-6. Open the **Frontend URL** to use the application!
-
----
-
 ## 🚀 **NEW: Simple Demo Available!**
 
 **Want to try it NOW without any setup?**
